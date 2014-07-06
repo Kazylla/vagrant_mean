@@ -1,0 +1,8 @@
+{
+  "id":"app",
+  "shell":"/bin/bash",
+  "git.name":"deploy",
+  "git.email":"deploy@example.com",
+  "pubkey":"",
+  "key":""
+}

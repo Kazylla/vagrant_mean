@@ -1,0 +1,4 @@
+Host *.amazonaws.com
+   StrictHostKeyChecking no
+   UserKnownHostsFile /dev/null
+   LogLevel error

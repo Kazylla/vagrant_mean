@@ -1,0 +1,20 @@
+{
+    "name": "dev",
+    "chef_type": "role",
+    "json_class": "Chef::Role",
+    "default_attributes": {
+        "base": {
+            "app.env": "development"
+        }
+    },
+    "description": "development",
+    "run_list": [
+      "recipe[selinux::disabled]",
+      "recipe[iptables]",
+      "recipe[base]",
+      "recipe[node]",
+      "recipe[mongodb]"
+    ],
+    "env_run_lists": {
+    }
+}
