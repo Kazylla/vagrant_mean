@@ -7,19 +7,44 @@
 # All rights reserved - Do Not Redistribute
 #
 
-# install rpm
-epel_filepath = "#{Chef::Config['file_cache_path']}/epel.rpm"
-remote_file epel_filepath do
-  source "http://ftp.riken.jp/Linux/fedora/epel/6/x86_64/epel-release-6-8.noarch.rpm"
+cache_path = Chef::Config['file_cache_path']
+pkgname = File.basename(node["node"]["url"], ".tar.gz")
+
+src_filepath = "#{cache_path}/#{pkgname}.tgz"
+extract_path = "#{cache_path}/#{pkgname}"
+
+# fetch tgz
+remote_file src_filepath do
+  source node["node"]["url"]
   action :create
-  notifies :run, "package[epel]", :immediately
-end
-package "epel" do
-  action :install
-  provider Chef::Provider::Package::Rpm
-  source epel_filepath
+  notifies :run, "bash[extract_node_js_tgz]", :immediately
+  not_if "which node"
 end
 
-# install node.js
-package "nodejs"
-package "npm"
+# extract tgz
+bash "extract_node_js_tgz" do
+  action :nothing
+  code <<-EOH
+    tar xzf #{src_filepath} -C #{cache_path}
+    EOH
+  notifies :run, "bash[install_node_js]", :immediately
+end
+
+# install
+bash "install_node_js" do
+  action :nothing
+  cwd extract_path
+  code <<-EOH
+    rm ChangeLog LICENSE README.md
+    cp -pr * /usr/.
+    EOH
+  notifies :run, "bash[install_global_packages]", :immediately
+end
+
+# install node packages from npm
+bash "install_global_packages" do
+  action :nothing
+  code <<-EOH
+    npm install -g #{node["node"]["npm.global.packages"]}
+    EOH
+end

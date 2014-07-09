@@ -93,11 +93,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     chef.data_bags_path = "./data_bags"
     chef.roles_path = "./roles"
     chef.add_role "dev"
-#   chef.add_recipe "mysql"
+#    chef.log_level = "info"
   
     # You may also specify custom JSON attributes:
     chef.json = {
-      :tz => 'Japan',
+      :tz => 'Asia/Tokyo',
     }
   end
 

@@ -12,7 +12,5 @@ default['base'] = {
   'hostname' => 'localhost',
   'swap.size' => 2048,
   'app.user' => 'app',
-  'app.name' => 'example',
-  'app.env' => 'development',
-  'app.repos' => 'git@github.com:kazylla/example.git'
+  'app.env' => 'development'
 }

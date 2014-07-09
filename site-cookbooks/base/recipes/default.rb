@@ -12,8 +12,6 @@ app_env = node['base']['app.env']
 app_user = node['base']['app.user']
 app_user_home = "/home/#{app_user}"
 app_base = "/#{app_user}"
-app_root = "#{app_base}/#{node['base']['app.name']}"
-deploy_root = "#{app_user_home}/#{node['base']['app.name']}"
 
 # instance type (vagrant or various ec2 instance types)
 instance_type = "vagrant"
@@ -28,6 +26,15 @@ file "set localtime" do
   path "/etc/localtime"
   content lazy { File.open("/usr/share/zoneinfo/#{node[:base][:localtime]}").read }
   only_if { not node[:base][:localtime].nil? and File.exists?("/usr/share/zoneinfo/#{node[:base][:localtime]}") }
+end
+
+# add epel repository
+bash 'add epel' do
+  code <<-EOC
+    rpm -ivh http://ftp-srv2.kddilabs.jp/Linux/distributions/fedora/epel/6/x86_64/epel-release-6-8.noarch.rpm
+    sed -i -e "s/enabled *= *1/enabled=0/g" /etc/yum.repos.d/epel.repo
+  EOC
+  creates "/etc/yum.repos.d/epel.repo"
 end
 
 # create swapfile on every rhel instance
@@ -109,20 +116,6 @@ data_ids.each do |id|
     mode 0600
     owner u['id']
     group u['id']
-  end
-  # rewrite .bashrc
-  bashrc_path = "/home/#{u['id']}/.bashrc"
-  template "rewrite .bashrc" do
-    action :create
-    path bashrc_path
-    source "bashrc.erb"
-    mode 0644
-    owner u['id']
-    group u['id']
-    variables({
-      :app_root => app_root,
-      :deploy_root => deploy_root
-    })
   end
 end
 

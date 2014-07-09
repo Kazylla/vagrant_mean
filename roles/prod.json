@@ -12,8 +12,10 @@
       "recipe[selinux::disabled]",
       "recipe[iptables]",
       "recipe[base]",
+      "recipe[nginx]",
+      "recipe[mongodb]",
       "recipe[node]",
-      "recipe[mongodb]"
+      "recipe[app]"
     ],
     "env_run_lists": {
     }

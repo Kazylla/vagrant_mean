@@ -7,17 +7,16 @@
 # All rights reserved - Do Not Redistribute
 #
 
-cookbook_file "/etc/yum.repos.d/mongodb.repo" do
-  source "mongodb.repo"
-  mode 0755
-  owner "root"
-  group "root"
+# install mongodb
+node['mongodb']['package'].each_pair do |p,info|
+  yum_package p do
+    action :install
+    version info['version']
+    options "--enablerepo=#{info['repo']}"
+  end
 end
 
-# install mongodb
-package "mongodb-org"
-
-# nginx resource
+# mongodb resource
 service "mongod" do
   action [ :enable, :start ]
   supports :reload=> true, :restart => true

@@ -1,0 +1,40 @@
+<% node['app']['names'].each do |key,value| %>
+upstream <%= key %> {
+    ip_hash;
+    server 127.0.0.1:<%= value['port'] %>;
+}
+<% end %>
+
+server {
+    listen 80;
+    listen 443 ssl;
+
+    server_name <%= node['base']['hostname'] %>
+    server_tokens off;
+
+    ssl_certificate ssl/ssl.crt;
+    ssl_certificate_key ssl/ssl.key;
+
+    charset utf-8;
+
+    <% node['app']['names'].each_key do |name| %>
+    location /<%= name %> {
+        proxy_pass http://<%= name %>/;
+        error_log /var/log/nginx/<%= name %>_error.log;
+    }
+    <% end %>
+
+    error_page 404 /404.html;
+    error_page 500 502 503 504 /50x.html;
+
+    location ~ /(\.ht|\.git|\.svn|\.php) {
+        deny all;
+    }
+    location ~* ^.+\.(jpg|jpeg|gif|png|ico|css|zip|tgz|gz|rar|bz2|pdf|txt|tar|wav|bmp|rtf|js|flv|swf|html|htm)$ {
+        root /<%= node["base"]["app.user"] %>/<%= node["app"]["static"] %>/public;
+    }
+
+    location ~ .*\..*$ {
+        try_files $uri =404;
+    }
+}
