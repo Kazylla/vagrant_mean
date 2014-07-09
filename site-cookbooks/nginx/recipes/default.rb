@@ -73,8 +73,10 @@ end
 nginx_default_conf = "/etc/nginx/conf.d/default.conf"
 ruby_block "rename nginx default.conf" do
   block do
+    File.unlink("#{nginx_default_conf}.orig")
     File.rename(nginx_default_conf, "#{nginx_default_conf}.orig")
   end
+  only_if { File.exists?(nginx_default_conf) }
 end
 
 # delete /etc/init.d/httpd
