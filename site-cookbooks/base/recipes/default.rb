@@ -123,7 +123,7 @@ end
 sudo "app" do
   user "app"
   runas "ALL"
-  commands [ "/sbin/service nginx restart", "/sbin/service php-fpm restart" ]
+  commands node["base"]["app.commands"]
   host "ALL"
   nopasswd true
 end

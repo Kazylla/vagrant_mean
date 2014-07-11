@@ -19,7 +19,7 @@ server {
 
     <% node['app']['names'].each_key do |name| %>
     location /<%= name %> {
-        proxy_pass http://<%= name %>/;
+        proxy_pass http://<%= name %>;
         error_log /var/log/nginx/<%= name %>_error.log;
     }
     <% end %>

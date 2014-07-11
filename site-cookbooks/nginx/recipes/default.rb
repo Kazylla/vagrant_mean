@@ -71,10 +71,13 @@ end
 
 # config nginx applications
 nginx_default_conf = "/etc/nginx/conf.d/default.conf"
+nginx_default_conf_bak = "#{nginx_default_conf}.orig"
 ruby_block "rename nginx default.conf" do
   block do
-    File.unlink("#{nginx_default_conf}.orig")
-    File.rename(nginx_default_conf, "#{nginx_default_conf}.orig")
+    if File.exists?(nginx_default_conf_bak)
+      File.unlink(nginx_default_conf_bak)
+    end
+    File.rename(nginx_default_conf, nginx_default_conf_bak)
   end
   only_if { File.exists?(nginx_default_conf) }
 end

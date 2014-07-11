@@ -12,5 +12,6 @@ default['base'] = {
   'hostname' => 'localhost',
   'swap.size' => 2048,
   'app.user' => 'app',
+  'app.commands' => [ "/sbin/service nginx restart" ],
   'app.env' => 'development'
 }

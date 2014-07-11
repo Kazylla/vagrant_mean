@@ -47,4 +47,18 @@ bash "install_global_packages" do
   code <<-EOH
     npm install -g #{node["node"]["npm.global.packages"]}
     EOH
+  notifies :run, "bash[install_yeoman_packages]", :immediately
+end
+bash "install_yeoman_packages" do
+  action :nothing
+  code <<-EOH
+    npm install -g #{node["node"]["npm.yeoman.packages"]}
+    EOH
+  notifies :run, "bash[install_generator_packages]", :immediately
+end
+bash "install_generator_packages" do
+  action :nothing
+  code <<-EOH
+    npm install -g #{node["node"]["npm.generator.packages"]}
+    EOH
 end
