@@ -13,7 +13,7 @@ default['nginx'] = {
   'keepalive.timeout' => 65,
   'package' => {
     'nginx' => {
-      'version' => '1.6.0-1.el6.ngx',
+      'version' => '>= 1.6.0',
       'repo' => 'nginx'
     }
   }

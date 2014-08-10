@@ -9,13 +9,9 @@
 
 default['mongodb'] = {
   'package' => {
-    'mongodb' => {
-      'version' => '2.4.6-1.el6',
-      'repo' => 'epel'
-    },
-    'mongodb-server' => {
-      'version' => '2.4.6-1.el6',
-      'repo' => 'epel'
+    'mongodb-org' => {
+      'version' => '>= 2.6.4',
+      'repo' => 'mongodb'
     }
   }
 }

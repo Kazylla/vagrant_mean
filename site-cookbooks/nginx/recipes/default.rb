@@ -17,10 +17,17 @@ end
 
 # install nginx
 node['nginx']['package'].each_pair do |p,info|
-  yum_package p do
-    action :install
-    version info['version']
-    options "--enablerepo=#{info['repo']}"
+  package_and_version = p
+  if info.include?('version')
+    package_and_version += " #{info['version']}"
+  end
+  if info.include?('repo')
+    yum_package package_and_version do
+      action :install
+      options "--enablerepo=#{info['repo']}"
+    end
+  else
+    yum_package package_and_version
   end
 end
 
